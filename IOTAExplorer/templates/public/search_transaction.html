@@ -1,0 +1,33 @@
+ {% extends "public/search_template.html" %} 
+
+{% block main %}
+    <div class="tableTranContainer">
+        <h4>Search results for {{category}}: </h4>
+        <h5> {{searchable}}</h5>
+        
+            <!--TABLE-->
+            <table class ="transTable">
+                <thead>
+                    <tr>
+                        <th scope="col" >Transaction</th>
+                        <th scope="col" >Trytes</th>
+                        <th scope="col" >Milestone</th>
+                    </tr>
+                </thead>
+               
+                <tbody>
+                    {% for try,mile in x %}
+                    <tr>
+                        <td>{{ searchable }}</td>
+                        <td>{{ try }}</td>
+                        <td>{{ mile }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table> 
+    </div>
+{% endblock %}
+
+
+
+

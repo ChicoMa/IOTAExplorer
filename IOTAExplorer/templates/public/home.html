@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <title>IOTA Explorer</title>
+    
+    <style>
+        body{
+            background-color: rgb(30, 1, 133);
+            background-image: linear-gradient(rgb(30, 1, 133),rgb(42, 91, 148));
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+            overflow-x: hidden; 
+        }
+        .container{
+            width: 2000px;
+            height: 750px;
+            background-position: center top;
+            
+            top:0;
+            left:0;
+            right:0;
+            margin:0;
+        }
+        .text-input{
+            margin:10px;
+            padding:10px
+        }
+        img{
+            margin-top:10px;
+        }
+        .box{
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 400px;
+            height: 400px;
+            margin-left: -200px;
+            margin-top: -200px;
+            background: white;  
+            border: 5px solid white; 
+        }
+        
+        .dropdown{
+            padding: 30px;
+        }
+        h1{
+            font-family: poppins;
+            margin: 10px;
+        }
+        .circle div{
+            position:absolute;
+            width:40px;
+            height:40px;
+            opacity:0.6;
+            background-color: white;
+            border-radius:50%; 
+        }
+        .circle div:nth-child(1){
+            top:50%;
+            left:0px;
+            animation:animate1 20s linear infinite;
+        }
+        .circle div:nth-child(2){
+            top:30%;
+            left:100px;
+            animation:animate2 20s linear infinite;
+        }
+        .circle div:nth-child(3){
+            top:70%;
+            left:100px;
+            animation:animate2 20s linear infinite;
+        }
+        .circle div:nth-child(4){
+            top:60%;
+            left:150px;
+            animation:animate3 20s linear infinite;
+        }
+        .circle div:nth-child(5){
+            top:90%;
+            left:150px;
+            animation:animate3 20s linear infinite;
+        }
+        .circle div:nth-child(6){
+            top:42%;
+            left:200px;
+            animation:animate4 20s linear infinite;
+        }
+        .circle div:nth-child(7){
+            top:65%;
+            left:210px;
+            animation:animate4 20s linear infinite;
+        }
+        .circle div:nth-child(8){
+            top:54%;
+            left:300px;
+            animation:animate5 20s linear infinite;
+        }
+        .circle div:nth-child(9){
+            top:34%;
+            left:330px;
+            animation:animate5 20s linear infinite;
+        }
+        .circle div:nth-child(10){
+            top:18%;
+            left:354px;
+            animation:animate5 20s linear infinite;
+        }
+        .circle div:nth-child(11){
+            top:80%;
+            left:389px;
+            animation:animate5 20s linear infinite;
+        }
+        .circle div:nth-child(12){
+            top:12%;
+            left:400px;
+            animation:animate6 20s linear infinite;
+        }
+        .circle div:nth-child(13){
+            top:93%;
+            left:430px;
+            animation:animate6 20s linear infinite;
+        }
+        .circle div:nth-child(14){
+            top:5%;
+            left:500px;
+            animation:animate6 20s linear infinite;
+        }
+        .circle div:nth-child(15){
+            top:45%;
+            left:800px;
+            animation:animate7 20s linear infinite;
+        }
+        .circle div:nth-child(16){
+            top:42%;
+            left:870px;
+            animation:animate7 20s linear infinite;
+        }
+        .circle div:nth-child(17){
+            top:20%;
+            left:870px;
+            animation:animate7 20s linear infinite;
+        }
+        .circle div:nth-child(18){
+            top:42%;
+            left:870px;
+            animation:animate7 20s linear infinite;
+        }
+        .circle div:nth-child(19){
+            top:67%;
+            left:870px;
+            animation:animate7 20s linear infinite;
+        }
+        .circle div:nth-child(20){
+            top:9%;
+            left:900px;
+            animation:animate8 20s linear infinite;
+        }
+        .circle div:nth-child(21){
+            top:89%;
+            left:970px;
+            animation:animate8 20s linear infinite;
+        }
+        .circle div:nth-child(22){
+            top:41%;
+            left:1000px;
+            animation:animate8 20s linear infinite;
+        }
+        .circle div:nth-child(23){
+            top:79%;
+            left:1000px;
+            animation:animate9 20s linear infinite;
+        }
+        .circle div:nth-child(24){
+            top:67%;
+            left:1070px;
+            animation:animate9 20s linear infinite;
+        }
+
+        @keyframes animate1{
+            0%{
+                transform: scale(0) translateY(0) rotate(0);
+                opacity:0;
+            }
+            5%{
+                transform: scale(1) translateY(-30px) rotate(0);
+                opacity:1;
+            }
+            100%{
+                transform: scale(1) translateY(-30px) rotate(0);
+                opacity:1;
+
+            }
+        }
+        @keyframes animate2{
+            0%{
+                transform: scale(0) translateY(0) rotate(0);
+                opacity:0;
+            }
+            20%{
+                transform: scale(1) translateY(-30px) rotate(0);
+                opacity:1;
+            }
+            100%{
+                transform: scale(1) translateY(-30px) rotate(0);
+                opacity:1;
+
+            }
+        }
+        @keyframes animate3{
+            0%{
+                transform: scale(0) translateY(0) rotate(0);
+                opacity:0;
+            }
+            40%{
+                transform: scale(1) translateY(-30px) rotate(0);
+                opacity:1;
+            }
+            100%{
+                transform: scale(1) translateY(-30px) rotate(0);
+                opacity:1;
+
+            }
+        }
+        @keyframes animate4{
+            0%{
+                transform: scale(0) translateY(0) rotate(0);
+                opacity:0;
+            }
+            50%{
+                transform: scale(1) translateY(-30px) rotate(0);
+                opacity:1;
+            }
+            100%{
+                transform: scale(1) translateY(-30px) rotate(0);
+                opacity:1;
+
+            }
+        }
+        @keyframes animate5{
+            0%{
+                transform: scale(0) translateY(0) rotate(0);
+                opacity:0;
+            }
+            60%{
+                transform: scale(1) translateY(-30px) rotate(0);
+                opacity:1;
+            }
+            100%{
+                transform: scale(1) translateY(-30px) rotate(0);
+                opacity:1;
+
+            }
+        }
+        @keyframes animate6{
+            0%{
+                transform: scale(0) translateY(0) rotate(0);
+                opacity:0;
+            }
+            70%{
+                transform: scale(1) translateY(-30px) rotate(0);
+                opacity:1;
+            }
+            100%{
+                transform: scale(1) translateY(-30px) rotate(0);
+                opacity:1;
+
+            }
+        }
+        @keyframes animate7{
+            0%{
+                transform: scale(0) translateY(0) rotate(0);
+                opacity:0;
+            }
+            80%{
+                transform: scale(1) translateY(-30px) rotate(0);
+                opacity:1;
+            }
+            100%{
+                transform: scale(1) translateY(-30px) rotate(0);
+                opacity:1;
+
+            }
+        }
+        @keyframes animate8{
+            0%{
+                transform: scale(0) translateY(0) rotate(0);
+                opacity:0;
+            }
+            90%{
+                transform: scale(1) translateY(-30px) rotate(0);
+                opacity:1;
+            }
+            100%{
+                transform: scale(1) translateY(-30px) rotate(0);
+                opacity:1;
+
+            }
+        }
+        @keyframes animate9{
+            0%{
+                transform: scale(0) translateY(0) rotate(0);
+                opacity:0;
+            }
+            100%{
+                transform: scale(1) translateY(-30px) rotate(0);
+                opacity:1;
+
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- <video autoplay muted loop id="backgroundVideo">
+            <source src= "{{ url_for('static', filename='img/backgroundVideo.mov') }}">
+        </video> -->
+        <div class="box">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <img src="{{ url_for('static', filename='img/iota-logo.png') }}" alt="logo" width="100" height="100">
+                <h2>IOTA Explorer</h2>
+            </div>
+        </div>
+        <div class="row no-gutters">
+            <!--SEARCH BAR CATEGORY SELECTION-->
+            <div class="col-lg-12 text-center">
+                <div class="dropdown menu">
+                     <select id="selection" onchange="selectCategory()" searchable="Enter">
+                        <option value="" disabled selected>Select Attribute</option>
+                        <option value="transaction">Transaction</option>
+                        <option value="address">Address</option>
+                        <option value="bundle">Bundle</option>
+                        <option value="tag">Tag</option>    
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row no-gutters">
+                <!--SEARCH BAR TEXT INPUT-->
+            <div class="col-lg-12 text-center">
+                <div class="text_input">
+                    <input type="text" class="form-control" name="in" id="search" placeholder="Search">
+                </div>
+            </div>
+        </div>
+        <div class="row no-gutters">
+            <div class="col-lg-12 text-center">
+                <button class="btn btn primary" id="submit" type="submit" onclick="searchData()">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="circle">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    </div>
+    
+    <script>
+   
+        /* Change search bar placeholder w/ category selection */
+        function selectCategory(){
+            var x = document.getElementById("selection").value;
+                document.getElementById("search").placeholder = "Enter " + x + "..."; 
+        }
+
+        //  Create query in URL 
+        function searchData() {
+            /* Collect search bar text */
+            var category = document.getElementById("selection").value;
+            var searchable = document.getElementById("search").value;
+            if (searchable !== '' && category !== '') {
+                if (category == "transaction" && searchable.length==81){
+                    location.href = "/search/" + category+"/" + searchable;
+                }
+                else if (category == "address" && searchable.length==81){
+                    location.href = "/search/" + category+"/" + searchable;
+                }
+                else if (category == "address" && searchable.length==90){
+                    var noChecksum = searchable.substring(0, 81); 
+                    location.href = "/search/" + category+"/" + noChecksum;
+                }
+                else if (category == "bundle" && searchable.length==81){
+                    location.href = "/search/" + category+"/" + searchable;
+                }
+                else if (category == "tag" && searchable.length==27){
+                    location.href = "/search/" + category+"/" + searchable;
+                }
+                else alert("The length of " + category + " is not correct")
+            }else {
+                alert('All fields must be entered');
+            }
+        }
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js" integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
+    
+    

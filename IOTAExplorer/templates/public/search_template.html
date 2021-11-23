@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    
+    <title>IOTA Explorer</title>
+    
+    <style>
+        body{
+            margin: 0;
+            height:100%;
+            padding-top:5px;
+        }
+        h1{
+            color: black;
+            margin:15px 0px;
+        }
+        h4{
+            margin-top:15px;
+        }
+        #submitF{
+            border: 1px solid black;
+            background-color: white;
+            color: black;
+            padding: 0px 10px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .selection{
+            height:auto;
+            width:150px;
+            max-height:320px;
+            overflow-x:hidden;
+        }
+        table{
+            margin-top:20px;
+            vertical-align: top;
+            white-space:nowrap;
+        }
+        table,th, td, tbody { 
+            border: 3px solid rgba(65, 75, 172); 
+            border-collapse: collapse;
+        }
+        .transTable td, .transTable th{
+            height:100px;
+            display: inline-block; 
+            width: 355px;
+            white-space: normal;
+            overflow:auto;
+            word-wrap: break-word;
+        }
+        th{
+            max-height:50px;
+        }
+        .text-input{
+            margin:10px;
+            text-align:center
+        }
+        select{
+            margin:10px; 
+        }
+        .yearS{ 
+            width:200px;
+        }
+        #monthS{ 
+            width:200px;
+        }
+        .tableTranContainer,.tableHintContainer, .graphContainer{
+            margin-top:20px;
+            height:300px;
+            width:auto;
+            border: 5px solid rgba(0, 23, 230, 0.5); 
+            /* Scrollable table section */
+            white-space: normal;
+            overflow:auto;
+            word-wrap: break-word;
+            padding:10px;
+        }
+        .hintsTable td, .hintsTable th{
+            height:100px;
+            display: inline-block; 
+            white-space: normal;
+            overflow:auto;
+            word-wrap: break-word;
+            width: 275px;
+            margin:20px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="bar">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <img src="{{ url_for('static', filename='img/iota-logo.png') }}" alt="logo" width="100" height="100">
+                <h1>IOTA Explorer</h1>
+            </div>
+        </div>
+        <div class="row no-gutters">
+            <!--SEARCH BAR CATEGORY SELECTION-->
+            <div class="col-lg-2">
+                <div class="dropdown menu">
+                     <select id="selection" onchange="selectCategory()" searchable="Enter">
+                        <option value="" disabled selected>Select Attribute</option>
+                        <option value="transaction">Transaction</option>
+                        <option value="address">Address</option>
+                        <option value="bundle">Bundle</option>
+                        <option value="tag">Tag</option>    
+                    </select>
+                </div>
+            </div>
+                <!--SEARCH BAR TEXT INPUT-->
+            <div class="col-lg-8 tex-center">
+                <div class="text_input">
+                    <!-- <input type="hidden" value="category" id="search_param"> -->
+                    <input type="text" class="form-control" name="in" id="search" placeholder="Search">
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <button class="btn btn primary" id="submit" type="submit" onclick="searchData()">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <main>
+                {% block main %}
+                {% endblock %}
+            </main>
+        </div>
+    </div>
+</div>
+
+    <script>
+        /* Change search bar placeholder w/ category selection */
+        function selectCategory(){
+            var x = document.getElementById("selection").value;
+                document.getElementById("search").placeholder = "Enter " + x + "..."; 
+        }
+        // Create query in URL 
+        function searchData() {
+            /* Collect search bar text */
+            var category = document.getElementById("selection").value;
+            var searchable = document.getElementById("search").value;
+            if (searchable !== '' && category !== '') {
+                if (category == "transaction" && searchable.length==81){
+                    location.href = "/search/" + category+"/" + searchable;
+                }
+                else if (category == "address" && searchable.length==81){
+                    location.href = "/search/" + category+"/" + searchable;
+                }
+                else if (category == "address" && searchable.length==90){
+                    var noChecksum = searchable.substring(0, 81); 
+                    location.href = "/search/" + category+"/" + noChecksum;
+                }
+                else if (category == "bundle" && searchable.length==81){
+                    location.href = "/search/" + category+"/" + searchable;
+                }
+                else if (category == "tag" && searchable.length==27){
+                    location.href = "/search/" + category+"/" + searchable;
+                }
+                else alert("The length of " + category + " is not correct")
+            }else {
+                alert('All fields must be entered');
+            }
+        }
+        // Refresh results page periodically
+        window.onload = setupRefresh;
+        function setupRefresh(){
+            setTimeout("refreshPage();", 300000);
+        }
+        function refreshPage(){
+            window.location = location.href;
+        }
+        function sortHintsTable(){
+            var table, sortable, row, rows, tr, epoch, switching, i, x, y, shouldSwitchD, shouldSwitchI,prevDate, curDate;
+            table = document.getElementById("hintsTable");
+            sortable = document.getElementById("tableSort").value;
+            row = document.getElementById("hintsTable").getElementsByTagName("tbody")[0];
+            switching = true;
+            /* Make a loop that will continue until no switching has been done:*/
+            while (switching) {
+                //start by saying: no switching is done:
+                switching = false;
+                tr = table.tBodies[0].rows;
+                /* Loop through all table rows (except the first, which contains table headers):*/                            
+                if (sortable == "incTime" || sortable == "decTime"){
+                    for (i = 0; i < (tr.length); i++) {
+                        // Start by saying there should be no switching:
+                        shouldSwitchD = false;
+                        shouldSwitchI = false;
+                        /* Get the two elements you want to compare, one from current row and one from the next:*/
+                        curDate = row.rows[i].cells[0].innerHTML;
+                        x = new Date(curDate).getTime();
+                        prevDate = row.rows[i+1].cells[0].innerHTML;
+                        y = new Date(prevDate).getTime();
+                
+                        //check if the two rows should switch place:
+                        if (sortable == "incTime"){
+                            if (Number(x) > Number(y)) {
+                                //if so, mark as a switch and break the loop:
+                                shouldSwitchI = true;
+                                break;
+                            }
+                        }
+                        if (sortable == "decTime"){
+                            
+                            if (Number(x) < Number(y)) {
+                                //if so, mark as a switch and break the loop:
+                                shouldSwitchD = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (sortable == "incMiles" || sortable == "decMiles"){
+                    for (i = 0; i < (tr.length); i++) {
+                        //start by saying there should be no switching:
+                        shouldSwitchD = false;
+                        shouldSwitchI = false;
+                        /*Get the two elements you want to compare, one from current row and one from the next:*/
+                        row = document.getElementById("hintsTable").getElementsByTagName("tbody")[0];
+                        x = row.rows[i].cells[3].innerHTML;
+                        y = row.rows[i+1].cells[3].innerHTML;
+                    
+                        //check if the two rows should switch place:
+                        if (sortable == "incMiles"){
+                            if (Number(x) > Number(y)) {
+                                //if so, mark as a switch and break the loop:
+                                shouldSwitchI = true;
+                                break;
+                            }
+                        }
+                        if (sortable == "decMiles"){
+                            if (Number(x) < Number(y)) {
+                                //if so, mark as a switch and break the loop:
+                                shouldSwitchD = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (shouldSwitchD) {
+                /*If a switch has been marked, make the switch and mark that a switch has been done:*/
+                row.rows[i].parentNode.insertBefore(row.rows[i+1], row.rows[i]);
+                switching = true;
+                }
+                if (shouldSwitchI) {
+                /*If a switch has been marked, make the switch
+                and mark that a switch has been done:*/
+                row.rows[i].parentNode.insertBefore(row.rows[i+1], row.rows[i]);
+                switching = true;
+                }
+            }
+         }
+        function filterTable(){
+            var yearInput ,row, date, epoch, monthInput, table, tr, td, tdm, i;
+            monthInput = document.getElementById("monthS").value;
+            yearInput = document.getElementById("yearS").value;
+            table = document.getElementById("hintsTable");
+            tr = table.tBodies[0].rows
+            row = document.getElementById("hintsTable").getElementsByTagName("tbody")[0];
+            // Loop through all table rows, and hide those who don't match the search query
+            if((monthInput == "All" || monthInput == '') && yearInput != ''){
+                for (i = 0; i < tr.length + 1; i++) {
+                    date = row.rows[i].cells[0].innerHTML;
+                    epoch = new Date(date);
+                    td = epoch.getFullYear();
+                    if (td) {
+                        if(td==yearInput){
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    } 
+                }
+            }
+            else if(monthInput != "All" && yearInput != ''){
+                for (i = 0; i < tr.length +1; i++) {
+                    date = row.rows[i].cells[0].innerHTML;
+                    epoch = new Date(date);
+                    td = epoch.getFullYear();
+                    tdm = epoch.getMonth();
+                    if (td) {
+                        if (tdm) {
+                            if(td==yearInput && tdm==monthInput){
+                                tr[i].style.display = "";
+                            } else {
+                                    tr[i].style.display = "none";
+                            }
+                        } 
+                    }
+                }
+            }
+            else alert("Enter filter details");
+        }
+        window.addEventListener("load", function() {
+            // cal total page load time
+            const perfData = window.performance.timing;
+            const pageLoadTime = perfData.loadEventEnd;
+            console.log("Load: " + pageLoadTime);
+            // cal request response time
+            const connectTime = perfData.responseEnd - perfData.requestStart;
+            console.log("response: " + connectTime);
+            // cal page render time
+            const renderTime = perfData.domComplete - perfData.domLoading;
+            console.log("render: " + renderTime);
+        }, false);
+
+</script>
+
+
+{% block script %}
+{% endblock %}
+<!-- <script src="/assets/vendor/chart.js/dist/Chart.min.js"></script>
+<script src="/assets/vendor/chart.js/dist/Chart.extension.js"></script> -->
+<!-- <script src="http://d3js.org/d3.v3.min.js"></script> -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js" integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
+    
